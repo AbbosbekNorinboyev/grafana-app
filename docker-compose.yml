@@ -4,10 +4,29 @@ services:
     volumes:
       # Absolyut yo'l bilan mount qilamiz
       - /c/Abbos/BRB/Grafana/src/main/resources/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /C:/Abbos/BRB/Grafana/logs
     ports:
       - "9090:9090"
+
+  loki:
+    image: grafana/loki:2.9.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    volumes:
+      - /c/Abbos/BRB/Grafana/logs:/var/log
+      - /C:/Abbos/BRB/Grafana/src/main/resources/promtail-config.yml
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
 
   grafana:
     image: grafana/grafana
     ports:
       - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
