@@ -1,0 +1,19 @@
+server:
+  port: 4455
+
+spring:
+  application:
+    name: grafana
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  endpoint:
+    prometheus:
+      access: read_only
+  prometheus:
+    metrics:
+      export:
+        enabled: true
